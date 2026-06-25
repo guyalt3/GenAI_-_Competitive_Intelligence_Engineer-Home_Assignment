@@ -1,0 +1,9 @@
+langchain
+langchain-community
+langchain-openai
+chromadb
+langchain-chroma
+tavily-python
+streamlit
+python-dotenv
+sentence-transformers

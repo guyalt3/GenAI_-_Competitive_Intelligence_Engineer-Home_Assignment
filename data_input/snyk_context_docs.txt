@@ -1,0 +1,9 @@
+COMPANY: Snyk
+DOMAIN: Software Composition Analysis (SCA) & Contextual Analysis
+ADVANTAGES:
+1. Developer-First Approach: Snyk integrates directly into IDEs and source code repositories (GitHub, GitLab), allowing developers to catch vulnerabilities early in the development lifecycle (Shift Left).
+2. Contextual Analysis (Snyk AppRisk): Snyk evaluates if a vulnerability is actually reachable by analyzing the application's runtime or static data flow, helping developers prioritize real threats over false positives.
+
+DISADVANTAGES:
+1. Binary vs. Source Code: Snyk focuses primarily on the source code level. It lacks the deep binary-level inspection capabilities that JFrog offers within the artifact repository (Artifactory).
+2. Production Gap: Since Snyk scans early, it sometimes misses vulnerabilities that are introduced during the build phase or package compilation, which is exactly where JFrog thrives.

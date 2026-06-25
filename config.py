@@ -1,0 +1,31 @@
+DB_STORAGE_DIR = "db_storage"
+STATIC_COLLECTION = "static_intelligence"
+DAILY_NEWS_COLLECTION = "daily_news"
+SOURCE_FILE = "data_input/snyk_context_docs.txt"
+
+OPENROUTER_API_BASE = "https://openrouter.ai/api/v1"
+LLM_MODEL = "gpt-4o-mini"
+EMBEDDING_MODEL = "openai/text-embedding-3-small"
+CROSS_ENCODER_MODEL = "BAAI/bge-reranker-base"
+
+RERANK_TOP_K = 4
+VECTOR_SEARCH_TOP_K = 8
+
+INGESTION_CHUNK_SIZE = 500
+INGESTION_CHUNK_OVERLAP = 100
+
+MAX_ARTICLES_PER_COMPETITOR = 5
+TAVILY_FETCH_BUFFER = 2
+CRON_SCANNER_CHUNK_SIZE = 1000
+CRON_SCANNER_CHUNK_OVERLAP = 150
+CRON_SCANNER_MIN_CHUNK_LENGTH = 120
+
+RAG_RECENCY_DAYS = 30
+
+TAVILY_MAX_RESULTS = 5
+TAVILY_SEARCH_DEPTH = "advanced"
+
+CORE_COMPETITORS = ["Snyk", "GitHub Advanced Security", "Sonatype"]
+FALLBACK_COMPETITORS = ["Snyk", "GitHub Advanced Security", "Sonatype"]
+
+APP_SNIPPET_LENGTH = 280
