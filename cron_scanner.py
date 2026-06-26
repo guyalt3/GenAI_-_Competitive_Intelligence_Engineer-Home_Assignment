@@ -28,29 +28,6 @@ from agent import (
 
 LOG_PREFIX = "[Cron Worker]"
 
-# RELEVANCE_PROMPT = ChatPromptTemplate.from_messages(
-#     [
-#         (
-#             "system",
-#             "You are a competitive intelligence quality filter for an offline RAG pipeline. "
-#             "Return YES only when a text chunk contains actionable, product-centric, or "
-#             "market-relevant intelligence about the specified competitor. Valid signals include "
-#             "new feature releases, product announcements, security advisories, capability shifts, "
-#             "strategic partnerships, and pricing changes. "
-#             "Return NO for corporate noise, generic blog filler, navigation bars, career ads, "
-#             "cookie notices, unrelated industry news, or content that does not materially "
-#             "inform competitive analysis.",
-#         ),
-#         (
-#             "human",
-#             "Competitor:\n{competitor}\n\n"
-#             "Text chunk:\n{chunk}\n\n"
-#             "Does this chunk contain high-value competitive intelligence about the competitor?\n"
-#             "Reply with exactly one word: YES or NO.",
-#         ),
-#     ]
-# )
-
 
 def log(message: str) -> None:
     """Print a standardized worker log line."""

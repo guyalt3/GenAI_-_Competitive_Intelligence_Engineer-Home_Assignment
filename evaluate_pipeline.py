@@ -7,11 +7,11 @@ from contextlib import redirect_stdout
 from datetime import datetime
 from pathlib import Path
 
-from dotenv import load_dotenv
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
+import config
 from agent import get_competitor_insights, initialize_environment
 
 GOLDEN_DATASET = [
@@ -116,11 +116,10 @@ JUDGE_PROMPT = ChatPromptTemplate.from_messages(
 def run_evaluation() -> None:
     """Execute the evaluation suite across the test dataset."""
     initialize_environment()
-    # judge_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     judge_llm = ChatOpenAI(
-        openai_api_base="https://openrouter.ai/api/v1",
+        openai_api_base=config.OPENROUTER_API_BASE,
         openai_api_key=os.getenv("OPENROUTER_API_KEY"),
-        model="openai/gpt-4o-mini",  # המודל דרך OpenRouter
+        model=config.LLM_MODEL,
         temperature=0,
     )
     json_parser = JsonOutputParser()
