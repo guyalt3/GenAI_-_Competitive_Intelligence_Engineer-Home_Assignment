@@ -8,7 +8,7 @@ This guide outlines the quick installation and execution steps for the End-to-En
 
 ### 1. Clone and Navigate
 
-```bash
+```
 git clone <repository-url>
 cd jfrog-competitor-intelligence
 
@@ -33,10 +33,17 @@ pip install -r requirements.txt
 
 ### 4. Configure API Tokens
 
-Open the existing `.env` file in the root directory and insert your values:
+Do **not** share your credentials. Instead, create a local `.env` file in the root directory based on the provided template:
+
+1. Duplicate the example file to create your environment configuration:
+```
+cp .env.example .env
 
 ```
-OPENAI_API_KEY=your_actual_openai_key_here
+
+2. Open the newly created .env file and populate it with your live API keys:
+```
+OPENROUTER_API_KEY=your_actual_openrouter_key_here
 TAVILY_API_KEY=your_actual_tavily_key_here
 
 ```
@@ -79,6 +86,13 @@ python -m streamlit run app.py --server.fileWatcherType none
 - **Result:** Launches the dashboard at `http://localhost:{PORT NUMBER}`.
   - Use the **Chat Tab** to test Adaptive Routing (**Cache Hit** for cached data / **Cache Miss** for live web searches).
   - Use the **Radar Tab** to view the filtered news feed.
+
+### 📊 Dashboard Preview & Trace
+#### Analyst Chat Console
+![Analyst Chat Console - Part 1](assets/dashboard_chat_part1.png)
+![Analyst Chat Console - Part 2](assets/dashboard_chat_part2.png)
+#### Competitor Radar Feed
+![Competitor Radar Feed](assets/dashboard_radar.png)
 
 ### 4. Execute the Quantitative Evaluation Suite
 

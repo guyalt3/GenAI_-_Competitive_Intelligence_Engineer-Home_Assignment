@@ -22,70 +22,6 @@ RERANKER_MODEL = CrossEncoder(config.CROSS_ENCODER_MODEL)
 
 CACHE_DATE = datetime.now().strftime("%Y-%m-%d")
 
-
-# EVALUATION_PROMPT = ChatPromptTemplate.from_messages(
-#     [
-#         (
-#             "system",
-#             "You are a competitive intelligence routing assistant. "
-#             "Your job is to decide whether locally cached documents are enough "
-#             "to answer a user query accurately and with up-to-date information.",
-#         ),
-#         (
-#             "human",
-#             "User query:\n{query}\n\n"
-#             "Competitor:\n{competitor}\n\n"
-#             "Retrieved local context:\n{context}\n\n"
-#             "Is this local context fully sufficient to answer the user's query "
-#             "accurately and up-to-date?\n"
-#             "Reply with exactly one word: YES or NO.",
-#         ),
-#     ]
-# )
-#
-# SYNTHESIS_PROMPT_WITH_JFROG_IMPACT = ChatPromptTemplate.from_messages(
-#     [
-#         (
-#             "system",
-#             "You are a JFrog competitive intelligence analyst. "
-#             "Use only the provided context to answer the query. "
-#             "Structure your response clearly and include a dedicated section titled "
-#             "'Impact on JFrog' that explains strategic implications for JFrog. "
-#             "End with a 'Sources' section listing every source you relied on.",
-#         ),
-#         (
-#             "human",
-#             "User query:\n{query}\n\n"
-#             "Competitor:\n{competitor}\n\n"
-#             "Compiled context:\n{context}\n\n"
-#             "Available sources:\n{sources}\n\n"
-#             "Generate the final intelligence brief.",
-#         ),
-#     ]
-# )
-#
-# SYNTHESIS_PROMPT_WITHOUT_JFROG_IMPACT = ChatPromptTemplate.from_messages(
-#     [
-#         (
-#             "system",
-#             "You are a competitive intelligence analyst. "
-#             "Use only the provided context to answer the query. "
-#             "Structure your response clearly. "
-#             "CRITICAL: Do not mention JFrog, do not perform any impact analysis on JFrog, "
-#             "and focus strictly on the competitor. "
-#             "End with a 'Sources' section listing every source you relied on.",
-#         ),
-#         (
-#             "human",
-#             "User query:\n{query}\n\n"
-#             "Competitor:\n{competitor}\n\n"
-#             "Compiled context:\n{context}\n\n"
-#             "Available sources:\n{sources}\n\n"
-#             "Generate the final intelligence brief.",
-#         ),
-#     ]
-# )
-
 load_dotenv()
 
 
@@ -93,10 +29,6 @@ def initialize_environment() -> None:
     """Load environment variables from a .env file."""
     load_dotenv()
 
-
-# def create_llm() -> ChatOpenAI:
-#     """Return a fast, cost-effective OpenAI chat model."""
-#     return ChatOpenAI(model=LLM_MODEL, temperature=0)
 
 def create_llm() -> ChatOpenAI:
     """Return a fast, cost-effective OpenRouter chat model."""
@@ -474,114 +406,6 @@ def get_competitor_insights(
     )
     print("Done.\n")
     return answer, compiled_context
-
-
-# def get_competitor_insights(
-#     query_text: str,
-#     competitor_name: str,
-#     include_jfrog_impact: bool = True,
-#     llm: ChatOpenAI | None = None,
-#     tavily_client: TavilyClient | None = None,
-#     static_store: Chroma | None = None,
-#     daily_news_store: Chroma | None = None,
-# ) -> tuple[str, str]:
-#     """
-#     Route a competitor query through local vector search, optional web search,
-#     and final synthesis.
-#     """
-#     print(f"\nAnalyzing query for competitor '{competitor_name}'...")
-#     print(f"Query: {query_text}")
-#
-#     llm = llm or create_llm()
-#     tavily_client = tavily_client or create_tavily_client()
-#
-#     if static_store is None or daily_news_store is None:
-#         embeddings = create_embeddings()
-#         static_store, daily_news_store = connect_vector_stores(embeddings)
-#
-#     print("Checking local cache...")
-#     static_results, daily_results = search_local_collections(
-#         query_text,
-#         competitor_name,
-#         static_store,
-#         daily_news_store,
-#     )
-#     print(
-#         f"Retrieved {len(static_results)} static chunk(s) and "
-#         f"{len(daily_results)} daily news chunk(s)."
-#     )
-#
-#     combined_chunks = static_results + daily_results
-#
-#     current_dt = datetime.strptime(CACHE_DATE, "%Y-%m-%d")
-#     cutoff_dt = current_dt - timedelta(days=config.RAG_RECENCY_DAYS)
-#     cutoff_str = cutoff_dt.strftime("%Y-%m-%d")
-#
-#     fresh_chunks: list[Document] = []
-#     for chunk in combined_chunks:
-#         doc_type = chunk.metadata.get("type", "static")
-#         doc_date = chunk.metadata.get("date", "")
-#
-#         if doc_type == "static":
-#             fresh_chunks.append(chunk)
-#         elif doc_type == "dynamic" and doc_date >= cutoff_str:
-#             fresh_chunks.append(chunk)
-#         else:
-#             print(f"[Recency Filter] Discarding stale chunk from {doc_date} (Cutoff: {cutoff_str})")
-#
-#     print(
-#         f"[Two-Stage RAG] Re-ranking {len(fresh_chunks)} raw chunks "
-#         "using local Cross-Encoder..."
-#     )
-#     filtered_chunks = rerank_chunks(query_text, fresh_chunks)
-#
-#     local_context = _format_documents(filtered_chunks, "Re-ranked Cache")
-#     sources = _extract_sources(filtered_chunks, "Re-ranked Cache")
-#
-#     print("Evaluating whether local context is sufficient...")
-#     cache_hit = evaluate_context_sufficiency(
-#         llm,
-#         query_text,
-#         competitor_name,
-#         local_context,
-#     )
-#
-#     web_documents: list[Document] = []
-#
-#     if cache_hit:
-#         print("Cache Hit! Using local context to generate response.")
-#         compiled_context = local_context
-#     else:
-#         print("Cache Miss! Triggering Web Search...")
-#         web_results = fetch_web_results(tavily_client, query_text, competitor_name)
-#         print(f"Fetched {len(web_results)} web result(s) from Tavily.")
-#
-#         web_documents = cache_web_results(
-#             daily_news_store,
-#             web_results,
-#             competitor_name,
-#         )
-#
-#         if web_documents:
-#             web_context = _format_documents(web_documents, "Tavily Web Search")
-#             web_sources = _extract_sources(web_documents, "Tavily Web Search")
-#             compiled_context = f"{local_context}\n\n{web_context}".strip()
-#             sources.extend(web_sources)
-#         else:
-#             print("Web search returned no actionable results. Relying on local cache fallback.")
-#             compiled_context = local_context
-#
-#     print("Synthesizing final intelligence brief...")
-#     answer = synthesize_answer(
-#         llm,
-#         query_text,
-#         competitor_name,
-#         compiled_context,
-#         sources,
-#         include_jfrog_impact=include_jfrog_impact
-#     )
-#     print("Done.\n")
-#     return answer, compiled_context
 
 
 def main() -> None:
