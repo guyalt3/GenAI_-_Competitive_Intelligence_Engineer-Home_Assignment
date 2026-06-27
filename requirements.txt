@@ -1,9 +1,12 @@
 langchain
 langchain-community
+langchain-core
 langchain-openai
+langchain-text-splitters
 chromadb
 langchain-chroma
 tavily-python
 streamlit
 python-dotenv
 sentence-transformers
+torch
